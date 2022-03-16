@@ -1,0 +1,400 @@
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local Fly = Instance.new("TextButton")
+local Roundify = Instance.new("ImageLabel")
+local FY = Instance.new("TextLabel")
+local AutoDrop = Instance.new("TextButton")
+local Roundify_2 = Instance.new("ImageLabel")
+local AD = Instance.new("TextLabel")
+local GodMode = Instance.new("TextButton")
+local Roundify_3 = Instance.new("ImageLabel")
+local GM = Instance.new("TextLabel")
+local AntiAfk = Instance.new("TextButton")
+local Roundify_4 = Instance.new("ImageLabel")
+local AA = Instance.new("TextLabel")
+local TextLabel_2 = Instance.new("TextLabel")
+local Crash = Instance.new("TextButton")
+local Roundify_5 = Instance.new("ImageLabel")
+local CR = Instance.new("TextLabel")
+
+
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(34, 23, 41)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.Position = UDim2.new(0.138933063, 0, 0.303709745, 0)
+Frame.Size = UDim2.new(0, 432, 0, 218)
+
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(7, 7, 7)
+TextLabel.BorderColor3 = Color3.fromRGB(34, 23, 41)
+TextLabel.Position = UDim2.new(-0.00231481483, 0, -0.00458799582, 0)
+TextLabel.Size = UDim2.new(0, 432, 0, 36)
+TextLabel.Font = Enum.Font.Code
+TextLabel.Text = "Spooked's Gui V.1"
+TextLabel.TextColor3 = Color3.fromRGB(58, 27, 69)
+TextLabel.TextSize = 38.000
+
+Fly.Name = "Fly"
+Fly.Parent = Frame
+Fly.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Fly.BorderColor3 = Color3.fromRGB(34, 23, 41)
+Fly.BorderSizePixel = 0
+Fly.Position = UDim2.new(0.0377523825, 0, 0.205807358, 0)
+Fly.Size = UDim2.new(0, 72, 0, 21)
+Fly.Font = Enum.Font.SourceSans
+Fly.Text = "Fly"
+Fly.TextColor3 = Color3.fromRGB(255, 255, 255)
+Fly.TextSize = 22.000
+Fly.MouseButton1Down:connect(function()
+	repeat wait() 
+	until game.Players.LocalPlayer and game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:findFirstChild("Torso") and game.Players.LocalPlayer.Character:findFirstChild("Humanoid") 
+	local mouse = game.Players.LocalPlayer:GetMouse() 
+	repeat wait() until mouse
+	local plr = game.Players.LocalPlayer 
+	local torso = plr.Character.Torso 
+	local flying = true
+	local deb = true 
+	local ctrl = {f = 0, b = 0, l = 0, r = 0} 
+	local lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+	local maxspeed = 50 
+	local speed = 0 
+
+	function Fly() 
+		local bg = Instance.new("BodyGyro", torso) 
+		bg.P = 9e4 
+		bg.maxTorque = Vector3.new(9e9, 9e9, 9e9) 
+		bg.cframe = torso.CFrame 
+		local bv = Instance.new("BodyVelocity", torso) 
+		bv.velocity = Vector3.new(0,0.1,0) 
+		bv.maxForce = Vector3.new(9e9, 9e9, 9e9) 
+		repeat wait() 
+			plr.Character.Humanoid.PlatformStand = true 
+			if ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0 then 
+				speed = speed+.5+(speed/maxspeed) 
+				if speed > maxspeed then 
+					speed = maxspeed 
+				end 
+			elseif not (ctrl.l + ctrl.r ~= 0 or ctrl.f + ctrl.b ~= 0) and speed ~= 0 then 
+				speed = speed-1 
+				if speed < 0 then 
+					speed = 0 
+				end 
+			end 
+			if (ctrl.l + ctrl.r) ~= 0 or (ctrl.f + ctrl.b) ~= 0 then 
+				bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (ctrl.f+ctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(ctrl.l+ctrl.r,(ctrl.f+ctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed 
+				lastctrl = {f = ctrl.f, b = ctrl.b, l = ctrl.l, r = ctrl.r} 
+			elseif (ctrl.l + ctrl.r) == 0 and (ctrl.f + ctrl.b) == 0 and speed ~= 0 then 
+				bv.velocity = ((game.Workspace.CurrentCamera.CoordinateFrame.lookVector * (lastctrl.f+lastctrl.b)) + ((game.Workspace.CurrentCamera.CoordinateFrame * CFrame.new(lastctrl.l+lastctrl.r,(lastctrl.f+lastctrl.b)*.2,0).p) - game.Workspace.CurrentCamera.CoordinateFrame.p))*speed 
+			else 
+				bv.velocity = Vector3.new(0,0.1,0) 
+			end 
+			bg.cframe = game.Workspace.CurrentCamera.CoordinateFrame * CFrame.Angles(-math.rad((ctrl.f+ctrl.b)*50*speed/maxspeed),0,0) 
+		until not flying 
+		ctrl = {f = 0, b = 0, l = 0, r = 0} 
+		lastctrl = {f = 0, b = 0, l = 0, r = 0} 
+		speed = 0 
+		bg:Destroy() 
+		bv:Destroy() 
+		plr.Character.Humanoid.PlatformStand = false 
+	end 
+	mouse.KeyDown:connect(function(key) 
+		if key:lower() == "e" then 
+			if flying then flying = false 
+			else 
+				flying = true 
+				Fly() 
+			end 
+		elseif key:lower() == "w" then 
+			ctrl.f = 1 
+		elseif key:lower() == "s" then 
+			ctrl.b = -1 
+		elseif key:lower() == "a" then 
+			ctrl.l = -1 
+		elseif key:lower() == "d" then 
+			ctrl.r = 1 
+		end 
+	end) 
+	mouse.KeyUp:connect(function(key) 
+		if key:lower() == "w" then 
+			ctrl.f = 0 
+		elseif key:lower() == "s" then 
+			ctrl.b = 0 
+		elseif key:lower() == "a" then 
+			ctrl.l = 0 
+		elseif key:lower() == "d" then 
+			ctrl.r = 0 
+		end 
+	end)
+	Fly()
+end)
+
+Roundify.Name = "Roundify"
+Roundify.Parent = Fly
+Roundify.AnchorPoint = Vector2.new(0.5, 0.5)
+Roundify.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Roundify.BackgroundTransparency = 1.000
+Roundify.Position = UDim2.new(0.555555582, 0, 0.642857134, 0)
+Roundify.Size = UDim2.new(1, 8, 1, 8)
+Roundify.Image = "rbxassetid://3570695787"
+Roundify.ImageColor3 = Color3.fromRGB(0, 0, 0)
+Roundify.ScaleType = Enum.ScaleType.Slice
+Roundify.SliceCenter = Rect.new(100, 100, 100, 100)
+Roundify.SliceScale = 0.040
+
+FY.Name = "FY"
+FY.Parent = Roundify
+FY.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+FY.BorderColor3 = Color3.fromRGB(0, 0, 0)
+FY.Position = UDim2.new(0, 0, 0.206896558, 0)
+FY.Size = UDim2.new(0, 75, 0, 16)
+FY.Font = Enum.Font.SourceSans
+FY.Text = "Fly"
+FY.TextColor3 = Color3.fromRGB(255, 255, 255)
+FY.TextSize = 24.000
+FY.TextWrapped = true
+
+AutoDrop.Name = "Auto Drop"
+AutoDrop.Parent = Frame
+AutoDrop.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+AutoDrop.BorderColor3 = Color3.fromRGB(34, 23, 41)
+AutoDrop.BorderSizePixel = 0
+AutoDrop.Position = UDim2.new(0.288787782, 0, 0.203919157, 0)
+AutoDrop.Size = UDim2.new(0, 75, 0, 21)
+AutoDrop.Font = Enum.Font.SourceSans
+AutoDrop.Text = "Auto Drop"
+AutoDrop.TextColor3 = Color3.fromRGB(255, 255, 255)
+AutoDrop.TextSize = 20.000
+AutoDrop.MouseButton1Down:connect(function()
+	local toggle = false
+	game.Players.LocalPlayer:GetMouse().KeyDown:connect(function(key)
+		if key == "e" and toggle == false then
+			toggle = true
+		else
+			if key == 'e' then
+				toggle = false
+			end
+		end
+	end)
+
+	coroutine.resume(coroutine.create(function()
+		while wait() do
+			if toggle then
+				game.ReplicatedStorage.MainEvent:FireServer("DropMoney",10000)
+			end
+		end
+	end))
+end)
+
+Roundify_2.Name = "Roundify"
+Roundify_2.Parent = AutoDrop
+Roundify_2.AnchorPoint = Vector2.new(0.5, 0.5)
+Roundify_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Roundify_2.BackgroundTransparency = 1.000
+Roundify_2.Position = UDim2.new(0.553333342, 0, 0.5, 0)
+Roundify_2.Size = UDim2.new(1, 8, 1, 8)
+Roundify_2.Image = "rbxassetid://3570695787"
+Roundify_2.ImageColor3 = Color3.fromRGB(0, 0, 0)
+Roundify_2.ScaleType = Enum.ScaleType.Slice
+Roundify_2.SliceCenter = Rect.new(100, 100, 100, 100)
+Roundify_2.SliceScale = 0.040
+
+AD.Name = "AD"
+AD.Parent = Roundify_2
+AD.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+AD.BorderColor3 = Color3.fromRGB(0, 0, 0)
+AD.Position = UDim2.new(0.0240963884, 0, 0.206896544, 0)
+AD.Size = UDim2.new(0, 78, 0, 16)
+AD.Font = Enum.Font.SourceSans
+AD.Text = "Auto Drop"
+AD.TextColor3 = Color3.fromRGB(255, 255, 255)
+AD.TextSize = 20.000
+AD.TextWrapped = true
+
+GodMode.Name = "God Mode"
+GodMode.Parent = Frame
+GodMode.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+GodMode.BorderColor3 = Color3.fromRGB(34, 23, 41)
+GodMode.BorderSizePixel = 0
+GodMode.Position = UDim2.new(0.0364729613, 0, 0.382818222, 0)
+GodMode.Size = UDim2.new(0, 75, 0, 21)
+GodMode.Font = Enum.Font.SourceSans
+GodMode.Text = "God Mode"
+GodMode.TextColor3 = Color3.fromRGB(255, 255, 255)
+GodMode.TextSize = 20.000
+GodMode.MouseButton1Down:connect(function()
+	local LocalPlayer = game:GetService("Players").LocalPlayer
+
+	local function Invincibility()
+		if LocalPlayer.Character then
+			for i, v in pairs(LocalPlayer.Character:GetChildren()) do
+				if v.Name == "hitbox" then
+					v:Destroy()
+				end
+			end
+		end
+	end
+
+	while wait(0.5) do
+		Invincibility(LocalPlayer)
+	end
+end)
+
+Roundify_3.Name = "Roundify"
+Roundify_3.Parent = GodMode
+Roundify_3.AnchorPoint = Vector2.new(0.5, 0.5)
+Roundify_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Roundify_3.BackgroundTransparency = 1.000
+Roundify_3.Position = UDim2.new(0.553333342, 0, 0.59523809, 0)
+Roundify_3.Size = UDim2.new(1, 8, 1, 8)
+Roundify_3.Image = "rbxassetid://3570695787"
+Roundify_3.ImageColor3 = Color3.fromRGB(0, 0, 0)
+Roundify_3.ScaleType = Enum.ScaleType.Slice
+Roundify_3.SliceCenter = Rect.new(100, 100, 100, 100)
+Roundify_3.SliceScale = 0.040
+
+GM.Name = "GM"
+GM.Parent = Roundify_3
+GM.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+GM.BorderColor3 = Color3.fromRGB(0, 0, 0)
+GM.Position = UDim2.new(0.0240963884, 0, 0.206896544, 0)
+GM.Size = UDim2.new(0, 78, 0, 16)
+GM.Font = Enum.Font.SourceSans
+GM.Text = "God Mode"
+GM.TextColor3 = Color3.fromRGB(255, 255, 255)
+GM.TextSize = 20.000
+GM.TextWrapped = true
+
+AntiAfk.Name = "Anti Afk"
+AntiAfk.Parent = Frame
+AntiAfk.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+AntiAfk.BorderColor3 = Color3.fromRGB(34, 23, 41)
+AntiAfk.BorderSizePixel = 0
+AntiAfk.Position = UDim2.new(0.538787782, 0, 0.203919157, 0)
+AntiAfk.Size = UDim2.new(0, 75, 0, 21)
+AntiAfk.Font = Enum.Font.SourceSans
+AntiAfk.Text = "Anti Afk"
+AntiAfk.TextColor3 = Color3.fromRGB(255, 255, 255)
+AntiAfk.TextSize = 20.000
+AntiAfk.MouseButton1Down:connect(function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/grandpascripts/error502/main/AntiAfk.lua"))()
+end)
+
+Roundify_4.Name = "Roundify"
+Roundify_4.Parent = AntiAfk
+Roundify_4.AnchorPoint = Vector2.new(0.5, 0.5)
+Roundify_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Roundify_4.BackgroundTransparency = 1.000
+Roundify_4.Position = UDim2.new(0.5, 0, 0.5, 0)
+Roundify_4.Size = UDim2.new(1, 8, 1, 8)
+Roundify_4.Image = "rbxassetid://3570695787"
+Roundify_4.ImageColor3 = Color3.fromRGB(0, 0, 0)
+Roundify_4.ScaleType = Enum.ScaleType.Slice
+Roundify_4.SliceCenter = Rect.new(100, 100, 100, 100)
+Roundify_4.SliceScale = 0.040
+
+AA.Name = "AA"
+AA.Parent = Roundify_4
+AA.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+AA.BorderColor3 = Color3.fromRGB(0, 0, 0)
+AA.Position = UDim2.new(0.0240963884, 0, 0.206896544, 0)
+AA.Size = UDim2.new(0, 78, 0, 16)
+AA.Font = Enum.Font.SourceSans
+AA.Text = "Anti Afk"
+AA.TextColor3 = Color3.fromRGB(255, 255, 255)
+AA.TextSize = 20.000
+AA.TextWrapped = true
+
+TextLabel_2.Parent = Frame
+TextLabel_2.BackgroundColor3 = Color3.fromRGB(34, 23, 41)
+TextLabel_2.BorderColor3 = Color3.fromRGB(34, 23, 41)
+TextLabel_2.Position = UDim2.new(0.320923328, 0, 0.336587876, 0)
+TextLabel_2.Size = UDim2.new(0, 65, 0, 9)
+TextLabel_2.Font = Enum.Font.SourceSans
+TextLabel_2.Text = "Press E"
+TextLabel_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel_2.TextSize = 14.000
+TextLabel_2.TextStrokeColor3 = Color3.fromRGB(34, 23, 41)
+
+Crash.Name = "Crash"
+Crash.Parent = Frame
+Crash.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Crash.BorderColor3 = Color3.fromRGB(34, 23, 41)
+Crash.BorderSizePixel = 0
+Crash.Position = UDim2.new(0.786472976, 0, 0.203919157, 0)
+Crash.Size = UDim2.new(0, 75, 0, 21)
+Crash.Font = Enum.Font.SourceSans
+Crash.Text = "Crash"
+Crash.TextColor3 = Color3.fromRGB(255, 255, 255)
+Crash.TextSize = 20.000
+Crash.MouseButton1Down:connect(function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/lerkermer/luaprojects/master/SuperCustomServerCrasher"))()
+end)
+
+Roundify_5.Name = "Roundify"
+Roundify_5.Parent = Crash
+Roundify_5.AnchorPoint = Vector2.new(0.5, 0.5)
+Roundify_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Roundify_5.BackgroundTransparency = 1.000
+Roundify_5.Position = UDim2.new(0.5, 0, 0.5, 0)
+Roundify_5.Size = UDim2.new(1, 8, 1, 8)
+Roundify_5.Image = "rbxassetid://3570695787"
+Roundify_5.ImageColor3 = Color3.fromRGB(0, 0, 0)
+Roundify_5.ScaleType = Enum.ScaleType.Slice
+Roundify_5.SliceCenter = Rect.new(100, 100, 100, 100)
+Roundify_5.SliceScale = 0.040
+
+CR.Name = "CR"
+CR.Parent = Roundify_5
+CR.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+CR.BorderColor3 = Color3.fromRGB(0, 0, 0)
+CR.Position = UDim2.new(0.0240963884, 0, 0.206896544, 0)
+CR.Size = UDim2.new(0, 78, 0, 16)
+CR.Font = Enum.Font.SourceSans
+CR.Text = "Crash"
+CR.TextColor3 = Color3.fromRGB(255, 255, 255)
+CR.TextSize = 20.000
+CR.TextWrapped = true
+
+local UIS = game:GetService ('UserInputService')
+local Frame = script.Parent
+
+local dragToggle = nil
+local dragSpeed = 0.01 
+local dragStart = nil
+local startpos = nil
+
+local function updateInput(input)
+	local delta = input.Position - dragStart
+	local position = UDim2.new(startpos.X.Scale, startpos.X.Offset + delta.X,
+		startpos.Y.Scale, startpos.Y.Offset + delta .Y)
+	game:GetService('TweenService'):Create(Frame, TweenInfo.new(dragSpeed), {Position = position}):Play()
+end
+
+Frame.InputBegan:Connect(function(input)
+	if (input.UserInputType == Enum.UserInputType.MouseButton1) then
+		print('Click')
+		dragToggle = true
+		dragStart= input.Position
+		startpos = Frame.Position
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				print('Release')
+				dragToggle = false
+			end
+		end)
+	end
+end)
+
+UIS. InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		if dragToggle then
+			print('Drag')
+			updateInput(input)
+		end
+	end
+end)
